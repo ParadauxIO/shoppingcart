@@ -1,38 +1,49 @@
 package com.xgen.interview;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Optional;
 
 /**
- * This is the current implementation of ShoppingCart.
- * Please write a replacement
+ * An implementation of {@link IShoppingCart}
  */
 public class ShoppingCart implements IShoppingCart {
-    HashMap<String, Integer> contents = new HashMap<>();
-    Pricer pricer;
+
+    private final HashMap<String, Integer> contents = new HashMap<>();
+    private final Pricer pricer;
+
+    public ShoppingCart() {
+        this.pricer = new Pricer();
+    }
 
     public ShoppingCart(Pricer pricer) {
         this.pricer = pricer;
     }
 
-    public void addItem(String itemType, int number) {
-        if (!contents.containsKey(itemType)) {
-            contents.put(itemType, number);
+    public void addItem(String item, int amount) {
+        if (!contents.containsKey(item)) {
+            contents.put(item, amount);
         } else {
-            int existing = contents.get(itemType);
-            contents.put(itemType, existing + number);
+            int existing = contents.get(item);
+            contents.put(item, existing + amount);
         }
     }
 
     public void printReceipt() {
-        Object[] keys = contents.keySet().toArray();
+        int total = 0;
 
-        for (int i = 0; i < Array.getLength(keys) ; i++) {
-            Integer price = pricer.getPrice((String)keys[i]) * contents.get(keys[i]);
-            Float priceFloat = new Float(new Float(price) / 100);
-            String priceString = String.format("€%.2f", priceFloat);
+        for (String item : contents.keySet()) {
+            // If it's null, assume it's free and unbox to an integer.
+            int itemUnitPrice = Optional.ofNullable(pricer.getPrice(item))
+                    .orElse(0);
 
-            System.out.println(keys[i] + " - " + contents.get(keys[i]) + " - " + priceString);
+            int itemPrice = itemUnitPrice * contents.get(item);
+
+            total += itemPrice;
+
+            System.out.printf("%s - %s - €%.2f%n", item, contents.get(item), itemPrice/100f);
         }
+
+        System.out.printf("Total: €%.2f%n", total/100f);
     }
+    
 }
