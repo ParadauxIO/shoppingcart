@@ -6,68 +6,82 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-
+/**
+ * A test suite for {@link ShoppingCart} with 100% code-coverage as of 29/01/2022 4:58pm
+ * @since 1.0.0
+ * */
 public class ShoppingCartTest {
 
+    private static final String LS = System.lineSeparator();
+
     @Test
-    public void canAddAnItem() {
-        ShoppingCart sc = new ShoppingCart(new Pricer());
+    public void addItemTest() {
+        ShoppingCart cart = new ShoppingCart();
 
-        sc.addItem("apple", 1);
+        cart.addItem("banana", 1);
 
-        final ByteArrayOutputStream myOut = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(myOut));
-
-        sc.printReceipt();
-        assertEquals(String.format("apple - 1 - €1.00%n"), myOut.toString());
+        assertEquals("banana - 1 - €2.00" + LS + "Total: €2.00"
+                + LS, cart.toString());
     }
 
     @Test
-    public void canAddMoreThanOneItem() {
-        ShoppingCart sc = new ShoppingCart(new Pricer());
+    public void addMultipleDistinctItemsTest() {
+        ShoppingCart cart = new ShoppingCart();
 
-        sc.addItem("apple", 2);
+        cart.addItem("banana", 2);
+        cart.addItem("apple", 3);
 
-        final ByteArrayOutputStream myOut = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(myOut));
-
-        sc.printReceipt();
-        assertEquals(String.format("apple - 2 - €2.00%n"), myOut.toString());
+       assertEquals("banana - 2 - €4.00" + LS + "apple - 3 - €3.00"
+               + LS + "Total: €7.00" + LS, cart.toString());
     }
 
     @Test
-    public void canAddDifferentItems() {
-        ShoppingCart sc = new ShoppingCart(new Pricer());
+    public void addAdditionalItemsTest() {
+        ShoppingCart cart = new ShoppingCart(new Pricer());
 
-        sc.addItem("apple", 2);
-        sc.addItem("banana", 1);
+        cart.addItem("banana", 1);
+        cart.addItem("banana", 3);
 
-        final ByteArrayOutputStream myOut = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(myOut));
+        assertTrue(cart.toString().contains("banana - 4 - €8.00"));
+    }
 
-        sc.printReceipt();
 
-        String result = myOut.toString();
+    @Test
+    public void addItemWithoutListedPrice() {
+        ShoppingCart cart = new ShoppingCart();
 
-        if (result.startsWith("apple")) {
-            assertEquals(String.format("apple - 2 - €2.00%nbanana - 1 - €2.00%n"), result);
-        } else {
-            assertEquals(String.format("banana - 1 - €2.00%napple - 2 - €2.00%n"), result);
-        }
+        cart.addItem("weird_item", 1);
+        cart.addItem("weirder_item", 3);
+
+        assertEquals("weird_item - 1 - €0.00" + LS
+                + "weirder_item - 3 - €0.00" + LS + "Total: €0.00" + LS, cart.toString());
     }
 
     @Test
-    public void doesntExplodeOnMysteryItem() {
-        ShoppingCart sc = new ShoppingCart(new Pricer());
+    public void alternativeReceiptTest() {
+        ShoppingCart cart = new ShoppingCart(new Pricer(), ShoppingCart.ReceiptType.PRICE_AMOUNT_TITLE);
 
-        sc.addItem("crisps", 2);
+        cart.addItem("banana", 1);
+        cart.addItem("banana", 3);
 
-        final ByteArrayOutputStream myOut = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(myOut));
+        assertEquals("€8.00 - banana - 4" + LS + "Total: €8.00" + LS, cart.toString());
+    }
 
-        sc.printReceipt();
-        assertEquals(String.format("crisps - 2 - €0.00%n"), myOut.toString());
+    @Test
+    public void printReceiptTest() {
+        ShoppingCart cart = new ShoppingCart();
+
+        final ByteArrayOutputStream testOutput = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(testOutput));
+
+        cart.addItem("banana", 3);
+        cart.addItem("apple", 3);
+
+        cart.printReceipt();
+
+        assertEquals(cart.toString(), testOutput.toString());
     }
 }
 

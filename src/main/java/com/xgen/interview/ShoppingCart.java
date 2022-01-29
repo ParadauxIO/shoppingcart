@@ -61,7 +61,7 @@ public class ShoppingCart implements IShoppingCart {
      * Prints {@link ShoppingCart#toString} to STDOUT
      * */
     public void printReceipt() {
-        System.out.println(this);
+        System.out.print(this);
     }
 
     /**
