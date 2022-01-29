@@ -1,6 +1,6 @@
 package com.xgen.interview;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Optional;
 
 /**
@@ -8,7 +8,7 @@ import java.util.Optional;
  */
 public class ShoppingCart implements IShoppingCart {
 
-    private final HashMap<String, Integer> contents = new HashMap<>();
+    private final LinkedHashMap<String, Integer> contents = new LinkedHashMap<>();
     private final Pricer pricer;
 
     public ShoppingCart() {
@@ -45,5 +45,5 @@ public class ShoppingCart implements IShoppingCart {
 
         System.out.printf("Total: €%.2f%n", total/100f);
     }
-    
+
 }
