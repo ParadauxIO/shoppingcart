@@ -2,7 +2,6 @@ package com.xgen.interview;
 
 import java.util.HashMap;
 
-
 /**
  * A stub implementation - for this exercise, you may disregard that this is incomplete.
  */

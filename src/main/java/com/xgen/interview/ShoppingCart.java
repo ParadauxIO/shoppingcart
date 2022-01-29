@@ -3,7 +3,6 @@ package com.xgen.interview;
 import java.lang.reflect.Array;
 import java.util.*;
 
-
 /**
  * This is the current implementation of ShoppingCart.
  * Please write a replacement
