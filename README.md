@@ -13,6 +13,12 @@ Please note; there are no intentional tricks/traps in this project. Please work-
 
 Please do not spend more than 3 hours on this project - leave TODO comments or a Notes.md file if you run out of time.
 
+## TLDR:
+- Record items as they're swiped through a till
+- Print a receipt
+- addItem to add an item to the queue
+- printReceipt to print the results of the queue. 
+
 ## Your Tasks
 - Add a 'Total' line to the receipt. This should be the full price we should charge the customer.
 - Make the receipt print items in the order that they were scanned
